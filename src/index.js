@@ -9,7 +9,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middlewares: ensinam nosso servidor a entender JSON e a usar as regras do CORS
-app.use(cors());
+app.use(cors({
+  origin: 'https://my-checklist-frontend.vercel.app'
+}));
 app.use(express.json());
 
 // --- NOSSO "BANCO DE DADOS" EM MEMÓRIA ---
