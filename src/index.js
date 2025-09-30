@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middlewares: ensinam nosso servidor a entender JSON e a usar as regras do CORS
-app.use(cors({origin:[ 'https://my-checklist-frontend.vercel.app', 'http://localhost:5173/']})); // libera só o frontend"}));
+app.use(cors({origin:[ 'https://my-checklist-frontend.vercel.app', 'http://localhost:5173/', 'https://hook-customizado.vercel.app']})); // libera só o frontend"}));
 app.use(express.json());
 
 // --- NOSSO "BANCO DE DADOS" EM MEMÓRIA ---
@@ -41,6 +41,19 @@ app.post('/tasks', (req, res) => {
   
   res.status(201).json(newTask);
 });
+
+// ROTA DELETE: /tasks
+app.delete("/tasks/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.task.delete({ where: { id: Number(id) } }); // ou equivalente no banco
+    res.status(204).send();
+  } catch (error) {
+    res.status(404).json({ error: "Task not found" });
+  }
+});
+
+
 // ----------------------------
 
 // Inicia o servidor
