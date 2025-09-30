@@ -43,14 +43,18 @@ app.post('/tasks', (req, res) => {
 });
 
 // ROTA DELETE: /tasks
-app.delete("/tasks/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    await prisma.task.delete({ where: { id: Number(id) } }); // ou equivalente no banco
-    res.status(204).send();
-  } catch (error) {
-    res.status(404).json({ error: "Task not found" });
+app.delete("/tasks/:id", (req, res) => {
+  const { id } = req.params;
+  const taskId = Number(id);
+
+  const index = tasks.findIndex((task) => task.id === taskId);
+
+  if (index === -1) {
+    return res.status(404).json({ error: "Task not found" });
   }
+
+  tasks.splice(index, 1); // remove do array
+  res.status(204).send(); // sucesso sem corpo
 });
 
 
